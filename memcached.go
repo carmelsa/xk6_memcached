@@ -24,9 +24,9 @@ type Client struct {
 
 //XClient represents the Client constructor (i.e. `new Memcached.Client()`) and
 //returns a new Memcached client object.
-func (r *Memcached) XClient(ctxPtr *context.Context) interface{} {
+func (r *Memcached) XClient(ctxPtr *context.Context, server string) interface{} {
 	rt := common.GetRuntime(*ctxPtr)
-	return common.Bind(rt, &Client{client: memcache.New("0.0.0.0:11211")}, ctxPtr)
+	return common.Bind(rt, &Client{client: memcache.New(server)}, ctxPtr)
 }
 
 //Set the given key with the given value and expiration time.

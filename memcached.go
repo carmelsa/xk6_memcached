@@ -1,4 +1,4 @@
-package xk6_memcached
+package memcached
 
 import (
 	//"fmt"

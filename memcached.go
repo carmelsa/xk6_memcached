@@ -40,6 +40,10 @@ func (c *Client) Ping() error {
 	return c.client.Ping()
 }
 
+func (c *Client) setMaxIdleConns(maxIdleConns int) {
+	c.client.MaxIdleConns = maxIdleConns
+}
+
 // Get returns the value for the given key.
 func (c *Client) Get(key string) (string, error) {
 	item, err := c.client.Get(key)

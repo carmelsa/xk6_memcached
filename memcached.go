@@ -33,10 +33,26 @@ func (r *Memcached) XClient(ctxPtr *context.Context, server string) interface{} 
 
 //Set the given key with the given value and expiration time.
 func (c *Client) Set(key, value string, exp int32) {
+	aa := legalKey(key)
+	fmt.Println(fmt.Sprintf("legalKey resulte %v", aa))
 	err := c.client.Set(&memcache.Item{Key: key, Value: []byte(value), Expiration: exp})
 	if err != nil {
 		fmt.Println(fmt.Sprintf("error seting key %v", err))
 	}
+}
+
+func legalKey(key string) bool {
+	fmt.Println(fmt.Sprintf("len %v", len(key)))
+	if len(key) > 250 {
+		return false
+	}
+	for i := 0; i < len(key); i++ {
+		fmt.Println(i)
+		if key[i] <= ' ' || key[i] == 0x7f {
+			return false
+		}
+	}
+	return true
 }
 
 func (c *Client) Ping() error {

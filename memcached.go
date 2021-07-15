@@ -1,9 +1,10 @@
 package memcached
 
 import (
-	//"fmt"
 	//"time"
 	"context"
+	"fmt"
+
 	//"google.golang.org/appengine/memcache"
 	"github.com/bradfitz/gomemcache/memcache"
 	"go.k6.io/k6/js/common"
@@ -25,13 +26,21 @@ type Client struct {
 //XClient represents the Client constructor (i.e. `new Memcached.Client()`) and
 //returns a new Memcached client object.
 func (r *Memcached) XClient(ctxPtr *context.Context, server string) interface{} {
+	fmt.Println(fmt.Sprintf("start connecting to server %v", server))
 	rt := common.GetRuntime(*ctxPtr)
 	return common.Bind(rt, &Client{client: memcache.New(server)}, ctxPtr)
 }
 
 //Set the given key with the given value and expiration time.
 func (c *Client) Set(key, value string, exp int32) {
-	_ = c.client.Set(&memcache.Item{Key: key, Value: []byte(value), Expiration: exp})
+	err := c.client.Set(&memcache.Item{Key: key, Value: []byte(value), Expiration: exp})
+	if err != nil {
+		fmt.Println(fmt.Sprintf("error seting key %v", err))
+	}
+}
+
+func (c *Client) Ping() error {
+	return c.client.Ping()
 }
 
 // Get returns the value for the given key.

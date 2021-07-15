@@ -32,7 +32,7 @@ func (r *Memcached) XClient(ctxPtr *context.Context, server string) interface{} 
 }
 
 //Set the given key with the given value and expiration time.
-func (c *Client) Set(key, value string, exp int32) {
+func (c *Client) Set(key string, value string, exp int32) {
 	aa := legalKey(key)
 	fmt.Println(fmt.Sprintf("legalKey resulte %v", aa))
 	fmt.Println(fmt.Sprintf("key is %v", key))

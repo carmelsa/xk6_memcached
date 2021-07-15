@@ -25,7 +25,9 @@ type Client struct {
 func (r *Memcached) XClient(ctxPtr *context.Context, server string) interface{} {
 	//fmt.Println(fmt.Sprintf("start connecting to server %v", server))
 	rt := common.GetRuntime(*ctxPtr)
-	return common.Bind(rt, &Client{client: memcache.New(server)}, ctxPtr)
+	c := memcache.New(server)
+	c.MaxIdleConns = 1000
+	return common.Bind(rt, &Client{c}, ctxPtr)
 }
 
 //Set the given key with the given value and expiration time.
@@ -38,10 +40,6 @@ func (c *Client) Set(key string, value string, exp int32) {
 
 func (c *Client) Ping() error {
 	return c.client.Ping()
-}
-
-func (c *Client) Maxconn(maxIdleConns int) {
-	c.client.MaxIdleConns = maxIdleConns
 }
 
 // Get returns the value for the given key.

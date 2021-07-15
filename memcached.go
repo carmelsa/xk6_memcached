@@ -40,7 +40,7 @@ func (c *Client) Ping() error {
 	return c.client.Ping()
 }
 
-func (c *Client) setMaxIdleConns(maxIdleConns int) {
+func (c *Client) Maxconn(maxIdleConns int) {
 	c.client.MaxIdleConns = maxIdleConns
 }
 

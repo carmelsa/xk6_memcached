@@ -35,6 +35,8 @@ func (r *Memcached) XClient(ctxPtr *context.Context, server string) interface{} 
 func (c *Client) Set(key, value string, exp int32) {
 	aa := legalKey(key)
 	fmt.Println(fmt.Sprintf("legalKey resulte %v", aa))
+	fmt.Println(fmt.Sprintf("key is %v", key))
+
 	err := c.client.Set(&memcache.Item{Key: key, Value: []byte(value), Expiration: exp})
 	if err != nil {
 		fmt.Println(fmt.Sprintf("error seting key %v", err))

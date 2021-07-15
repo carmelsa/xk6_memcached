@@ -25,8 +25,15 @@ type Client struct {
 func (r *Memcached) XClient(ctxPtr *context.Context, server string, max int) interface{} {
 	//fmt.Println(fmt.Sprintf("start connecting to server %v", server))
 	rt := common.GetRuntime(*ctxPtr)
-	c := memcache.New(server)
-	c.MaxIdleConns = max
+	//c := memcache.New(server)
+	//c.MaxIdleConns = max
+
+	ss := new(memcache.ServerList)
+	if err := ss.SetServers(server); err != nil {
+		panic(err)
+	}
+	c := memcache.NewFromSelector(ss)
+	c.MaxIdleConns = 10
 	return common.Bind(rt, &Client{c}, ctxPtr)
 }
 

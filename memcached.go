@@ -22,11 +22,11 @@ type Client struct {
 
 //XClient represents the Client constructor (i.e. `new Memcached.Client()`) and
 //returns a new Memcached client object.
-func (r *Memcached) XClient(ctxPtr *context.Context, server string) interface{} {
+func (r *Memcached) XClient(ctxPtr *context.Context, server string, max int) interface{} {
 	//fmt.Println(fmt.Sprintf("start connecting to server %v", server))
 	rt := common.GetRuntime(*ctxPtr)
 	c := memcache.New(server)
-	c.MaxIdleConns = 1000
+	c.MaxIdleConns = max
 	return common.Bind(rt, &Client{c}, ctxPtr)
 }
 

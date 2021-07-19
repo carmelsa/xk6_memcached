@@ -45,6 +45,14 @@ func (c *Client) Set(key string, value string, exp int32) {
 	}
 }
 
+//FlushAll the given key with the given value and expiration time.
+func (c *Client) FlushAll() {
+	err := c.client.FlushAll()
+	if err != nil {
+		fmt.Println(fmt.Sprintf("error flush all data %v", err))
+	}
+}
+
 func (c *Client) Ping() error {
 	return c.client.Ping()
 }

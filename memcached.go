@@ -6,6 +6,7 @@ import (
 	"github.com/bradfitz/gomemcache/memcache"
 	"go.k6.io/k6/js/common"
 	"go.k6.io/k6/js/modules"
+	"time"
 )
 
 // Register the extension on module initialization, available to
@@ -22,18 +23,16 @@ type Client struct {
 
 //XClient represents the Client constructor (i.e. `new Memcached.Client()`) and
 //returns a new Memcached client object.
-func (r *Memcached) XClient(ctxPtr *context.Context, server string, max int) interface{} {
-	//fmt.Println(fmt.Sprintf("start connecting to server %v", server))
+func (r *Memcached) XClient(ctxPtr *context.Context, server string, max int, timeout int) interface{} {
 	rt := common.GetRuntime(*ctxPtr)
-	//c := memcache.New(server)
-	//c.MaxIdleConns = max
-
 	ss := new(memcache.ServerList)
+	memcache.New()
 	if err := ss.SetServers(server); err != nil {
 		panic(err)
 	}
 	c := memcache.NewFromSelector(ss)
-	c.MaxIdleConns = 10
+	c.MaxIdleConns = max
+	c.Timeout = time.Duration(timeout)
 	return common.Bind(rt, &Client{c}, ctxPtr)
 }
 

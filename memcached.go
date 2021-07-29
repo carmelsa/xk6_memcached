@@ -64,3 +64,30 @@ func (c *Client) Get(key string) (string, error) {
 	}
 	return string(item.Value), nil
 }
+
+// Gettry returns the value for the given key. if fail retry.
+func (c *Client) Gettry(key string, tries int) (string, error) {
+	try := 0
+	var err error
+	for try < tries {
+		item, err := c.client.Get(key)
+		if err == nil {
+			return string(item.Value), nil
+		}
+		try += 1
+	}
+	return "", err
+}
+
+//Set the given key with the given value and expiration time. if fail retry.
+func (c *Client) Settry(key string, value string, exp int32, tries int) {
+	try := 0
+	var err error
+	for try < tries {
+		err = c.client.Set(&memcache.Item{Key: key, Value: []byte(value), Expiration: exp})
+		if err == nil {
+			return
+		}
+	}
+	fmt.Println(fmt.Sprintf("error seting key %v", err))
+}
